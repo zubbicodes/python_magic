@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Tools</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__title">Python Tools by zubbihawk</div>
+        <div class="brand__subtitle">Run scripts from a clean GUI</div>
+      </div>
+      <div class="topbar__right">
+        <div class="pill" id="rootPathPill" title="Scripts root"></div>
+        <div class="pill pill--secondary" id="apiBasePill" title="API base URL" hidden></div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="sidebar__controls">
+          <input id="searchInput" class="input" type="text" placeholder="Search scripts…" />
+        </div>
+        <div class="scriptList" id="scriptList"></div>
+      </aside>
+
+      <section class="content">
+        <div class="card">
+          <div class="card__header">
+            <div>
+              <div class="h1" id="scriptTitle">Select a script</div>
+              <div class="muted" id="scriptPath"></div>
+            </div>
+            <button id="runBtn" class="btn btn--primary" disabled>Run</button>
+          </div>
+
+          <div id="guidedInputs" class="inputs"></div>
+
+          <details class="details" id="advancedBox">
+            <summary class="details__summary">Advanced (raw CLI args)</summary>
+            <div class="details__body">
+              <div class="formRow">
+                <label class="label" for="argsInput">Arguments</label>
+                <input
+                  id="argsInput"
+                  class="input"
+                  type="text"
+                  placeholder='Example: --help   or   "input.xlsx" "output.json"'
+                  disabled
+                />
+              </div>
+            </div>
+          </details>
+
+          <div class="formRow">
+            <label class="label" for="timeoutInput">Timeout (seconds)</label>
+            <input id="timeoutInput" class="input input--small" type="number" min="1" max="3600" value="300" />
+          </div>
+        </div>
+
+        <div class="card card--grow">
+          <div class="card__header card__header--tight">
+            <div class="tabs">
+              <button class="tab tab--active" data-tab="combined" type="button">Output</button>
+              <button class="tab" data-tab="stdout" type="button">Stdout</button>
+              <button class="tab" data-tab="stderr" type="button">Stderr</button>
+            </div>
+            <div class="meta" id="runMeta"></div>
+          </div>
+
+          <pre class="console" id="console"></pre>
+          <div class="artifacts" id="artifacts"></div>
+        </div>
+      </section>
+    </main>
+
+    <template id="scriptRowTpl">
+      <button class="scriptRow" type="button">
+        <div class="scriptRow__name"></div>
+        <div class="scriptRow__path"></div>
+      </button>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
