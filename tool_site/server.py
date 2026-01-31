@@ -33,6 +33,7 @@ EXCLUDED_DIR_NAMES = {
 DEFAULT_TIMEOUT_SECONDS = 300
 MAX_OUTPUT_CHARS = 200_000
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+API_KEY = os.environ.get("TOOL_SITE_API_KEY", "").strip()
 
 
 @dataclass(frozen=True)
@@ -481,6 +482,9 @@ class ToolHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path.startswith("/api/") and not self._authorize_request():
+            self._send_json(HTTPStatus.UNAUTHORIZED, {"error": "Unauthorized"})
+            return
         if parsed.path == "/api/scripts":
             self._handle_list_scripts()
             return
@@ -488,6 +492,9 @@ class ToolHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path.startswith("/api/") and not self._authorize_request():
+            self._send_json(HTTPStatus.UNAUTHORIZED, {"error": "Unauthorized"})
+            return
         if parsed.path == "/api/tool/run":
             self._handle_run_tool()
             return
@@ -516,6 +523,12 @@ class ToolHandler(SimpleHTTPRequestHandler):
         body = self.rfile.read(max(0, length))
         if not body:
             return None
+
+    def _authorize_request(self) -> bool:
+        if not API_KEY:
+            return True
+        provided = (self.headers.get("X-Api-Key") or "").strip()
+        return provided == API_KEY
         try:
             return json.loads(body.decode("utf-8"))
         except Exception:

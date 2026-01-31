@@ -18,6 +18,10 @@ To use the Netlify frontend with a remote backend, open the Netlify site with:
 
 `/?api=https://YOUR_BACKEND_BASE_URL`
 
+If the backend is protected with an API key, add:
+
+`/?api=https://YOUR_BACKEND_BASE_URL&key=YOUR_API_KEY`
+
 ## Deploy backend (scripts run on server)
 
 Netlify cannot run Python processes. Deploy the backend using Docker on a platform that supports containers.

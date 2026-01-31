@@ -32,10 +32,19 @@ if (apiBaseFromQuery) {
   localStorage.setItem("toolSiteApiBase", apiBaseFromQuery);
 }
 const API_BASE = localStorage.getItem("toolSiteApiBase") || "";
+const API_KEY = new URLSearchParams(location.search).get("key") || localStorage.getItem("toolSiteApiKey") || "";
+if (new URLSearchParams(location.search).get("key")) {
+  localStorage.setItem("toolSiteApiKey", API_KEY);
+}
 
 function apiUrl(path) {
   if (!API_BASE) return path;
   return `${API_BASE}`.replace(/\/$/, "") + path;
+}
+
+function apiHeaders() {
+  if (!API_KEY) return {};
+  return { "X-Api-Key": API_KEY };
 }
 
 function escapeText(text) {
@@ -344,7 +353,7 @@ async function runSelected() {
 
     const res = await fetch(`${apiUrl(endpoint)}?timeout=${encodeURIComponent(timeout)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...apiHeaders() },
       body,
     });
 
@@ -390,7 +399,7 @@ async function boot() {
       els.apiBasePill.textContent = API_BASE;
     }
 
-    const res = await fetch(apiUrl("/api/scripts"));
+    const res = await fetch(apiUrl("/api/scripts"), { headers: apiHeaders() });
     const data = await res.json();
     state.scripts = (data.scripts || []).map((s) => ({
       relPath: s.relPath,
