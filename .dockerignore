@@ -1,0 +1,13 @@
+.git
+.github
+.netlify
+.venv
+**/.venv
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+WEBP/target
+WEBP/output
+node_modules
+dist

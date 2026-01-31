@@ -623,7 +623,7 @@ class ToolHandler(SimpleHTTPRequestHandler):
 
 def main() -> int:
     host = os.environ.get("TOOL_SITE_HOST", "127.0.0.1")
-    port = int(os.environ.get("TOOL_SITE_PORT", "5179"))
+    port = int(os.environ.get("TOOL_SITE_PORT") or os.environ.get("PORT") or "5179")
 
     server = ThreadingHTTPServer((host, port), ToolHandler)
     print(f"Tool site running: http://{host}:{port}/")
